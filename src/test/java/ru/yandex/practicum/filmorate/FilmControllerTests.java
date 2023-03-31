@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class FilmControllerTests {
 
     @Test
-    void CreateFilmTest() {
+    void createFilmTest() {
         Film filmTest = Film.builder()
                 .name("film")
                 .description("description")
@@ -27,7 +27,7 @@ class FilmControllerTests {
     }
 
     @Test
-    void UpdateFilmTest() {
+    void updateFilmTest() {
         Film filmTest = Film.builder()
                 .name("film")
                 .description("description")
