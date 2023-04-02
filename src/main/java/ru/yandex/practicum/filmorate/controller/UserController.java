@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -11,11 +10,10 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/users")
+@Slf4j
 public class UserController {
     private final Map<Integer, User> users = new HashMap<>();
-    private final Set<String> emails = new HashSet<>();
     private int globalId = 0;
-    private static final Logger log = LoggerFactory.getLogger(FilmController.class);
 
     @GetMapping
     public List<User> findAll() {
@@ -25,10 +23,6 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user) {
-        if (emails.contains(user.getEmail())) {
-            log.error("User already exist");
-            throw new ValidationException("User already exist");
-        }
         if (user.getName() == null || user.getName().isEmpty() || user.getName().isBlank()) {
             log.error("User name empty");
             user.setName(user.getLogin());
@@ -36,7 +30,6 @@ public class UserController {
         globalId++;
         user.setId(globalId);
         users.put(user.getId(), user);
-        emails.add(user.getEmail());
         log.info("User successfully created");
         return user;
     }
@@ -50,11 +43,9 @@ public class UserController {
         }
         if (user.getName().isEmpty() || user.getName().isBlank() || user.getName() == null) {
             log.error("User name empty");
-            user.setName(user.getEmail());
+            user.setName(user.getLogin());
         }
-        emails.remove(users.get(replaceId));
         users.put(replaceId, user);
-        emails.add(user.getEmail());
         log.info("User successfully updated");
         return user;
     }
