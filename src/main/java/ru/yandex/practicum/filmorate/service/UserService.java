@@ -69,11 +69,11 @@ public class UserService {
         Set<Integer> friendsOther = friend.getFriends();
         Set<Integer> intersection = new HashSet<>(friendsUser);
         intersection.retainAll(friendsOther);
-        List<User> LinkedFriends = new ArrayList<>();
+        List<User> linkedFriends = new ArrayList<>();
         for (Integer id : intersection) {
-            LinkedFriends.add(inMemoryUserStorage.findById(id));
+            linkedFriends.add(inMemoryUserStorage.findById(id));
         }
         log.info("return linked friends list");
-        return LinkedFriends;
+        return linkedFriends;
     }
 }
