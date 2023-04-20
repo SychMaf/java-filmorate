@@ -73,8 +73,8 @@ class FilmControllerTests {
         inMemoryUserStorage.create(userTest);
         FilmService filmService = new FilmService(inMemoryFilmStorage);
         filmService.createLike(1, 1);
-        assertEquals(filmService.getPopularFilms(10).get(0).getLike().size(), 1);
+        assertEquals(filmService.getPopularFilms(10).get(0).getLikes().size(), 1);
         filmService.deleteLike(1, 1);
-        assertEquals(filmService.getPopularFilms(10).get(0).getLike().size(), 0);
+        assertEquals(filmService.getPopularFilms(10).get(0).getLikes().size(), 0);
     }
 }
