@@ -12,4 +12,11 @@ public interface UserStorage {
     User update(User user);
 
     User findById(Integer userId);
+
+    boolean addFriend(int firstUserId, int secondUserId);
+
+    boolean deleteFriend(int firstUserId, int secondUserId);
+
+    List<Integer> getFriendList(int userId);
+
 }
