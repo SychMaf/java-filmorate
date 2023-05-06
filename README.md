@@ -1,61 +1,69 @@
 # java-filmorate
-*some project description*
+Repository of the educational project "FilmoRate"
 
 
 # Database design
+Structure of database is shown in the [ER-diagram](https://dbdiagram.io/d/64499f196b31947051427af1)
+![database model](src/main/resources/DB.png)
 
-![database model](src/main/resources/BD.png)
+sprint peer review held on [28.04](https://docs.google.com/spreadsheets/d/10i_ERbYR9rZNS-Jf6VfJ59J4JjySz9xaCEeCyVkcXLQ/edit#gid=0)
+## Components description
+
+*client*: contains information about users
+
+*friendship*: contains information about "friend" interaction between two users
+
+*likes*: contains information about movies liked by users
+
+*film*: contains information about films
+
+*film_genre*: contains information about genres assigned to film
+
+*client*: contains genre names
+
+*mpa*: contains movie genres
 
 ## Example of queries for accessing the DB:
 
-Get full information about films (FilmController method: *findAll*):
+Get full information about films (FilmDbStorage method: *findAll*):
 ``` SQL
-SELECT f.film_id,
-	f.name,
-        f.description,
-        f.releasedate,
-        f.duration,
-        f.rating,
-        gr.genre
-FROM film AS f
-LEFT OUTER JOIN film_genre AS fg ON f.film_id = fg.film_id
-LEFT OUTER JOIN genre AS gr ON fg.genre_id = gr.genre_id
+SELECT f.*,
+       m.name
+FROM films AS f 
+JOIN mpa AS m ON f.mpa_id = m.mpa_id
 ```
 
-Get full(*except friends*) information about users (UserController method: *findAll*):
+Get full(*except friends*) information about users (UserDbStorage method: *findAll*):
 ``` SQL
-SELECT *
-FROM client
+SELECT u.*
+FROM clients AS u
 ```
 
-Get users friends (UserService method: *getFriends*):
+Get users friends (UserDbStorage method: *getFriends*):
 ``` SQL
-SELECT c.user_id,
-        fr.second,
-        s.status
-FROM client AS c
-LEFT OUTER JOIN friendship AS fr ON c.user_id = fr.first
-LEFT OUTER JOIN status AS s ON fr.status_id = s.status_id
+SELECT second_user_id 
+FROM friendship AS f 
+WHERE first_user_id = ?
 ```
 
-Get amount(*sorting*) of likes for a movie (FilmService method: *getPopularFilms*):
+Get amount(*sorting*) of likes for a movie (FilmDbStorage method: *getPopularFilms*):
 ``` SQL
-SELECT f.film_id AS id,
-        f.name AS name,
-        COUNT (l.user_id) AS num
-FROM film AS f
+SELECT f.*,
+       count (l.user_id) AS count_likes,
+       m.name
+FROM films AS f
 LEFT OUTER JOIN likes AS l ON f.film_id = l.film_id
-GROUP BY id,
-        name
-ORDER BY num DESC
-LIMIT 10;
+LEFT OUTER JOIN mpa AS m ON f.mpa_id = m.mpa_id
+GROUP BY f.name
+ORDER BY count (l.user_id) DESC
+LIMIT 10
 ```
 
-Get a list of users and movies that they liked:
+Get a film by id (FilmDbStorage method: *findById*):
 ``` SQL
-SELECT c.user_id AS id,
-        c.name AS name,
-        l.film_id
-FROM client AS c
-LEFT OUTER JOIN likes AS l ON c.user_id = l.user_id
+SELECT f.*, 
+       m.name
+FROM films AS f
+JOIN mpa AS m ON f.mpa_id = m.mpa_id 
+WHERE f.film_id = ?
 ```
