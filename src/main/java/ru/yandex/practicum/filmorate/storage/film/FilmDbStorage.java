@@ -99,7 +99,7 @@ public class FilmDbStorage implements FilmStorage {
     public boolean createLike(int userId, int filmId) {
         findFilm(filmId);
         userStorage.findById(userId);
-        String sql = "insert into likes (film_id, user_id) " +
+        String sql = "merge into likes key(film_id, user_id) " +
                 "values (?, ?)";
         return jdbcTemplate.update(sql, filmId, userId) > 0;
     }

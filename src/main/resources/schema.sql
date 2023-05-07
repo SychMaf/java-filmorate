@@ -49,7 +49,8 @@ create table if not exists friendship (
             on delete cascade,
     foreign key (second_user_id) references clients (user_id)
             on update cascade
-            on delete cascade
+            on delete cascade,
+    primary key (first_user_id, second_user_id)
 );
 
 create table if not exists likes (
@@ -60,5 +61,6 @@ create table if not exists likes (
                 on delete cascade,
     foreign key (user_id) references clients (user_id)
                 on update cascade
-                on delete cascade
+                on delete cascade,
+    primary key (film_id, user_id)
 );

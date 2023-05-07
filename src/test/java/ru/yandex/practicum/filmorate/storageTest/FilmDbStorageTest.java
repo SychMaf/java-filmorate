@@ -150,7 +150,7 @@ public class FilmDbStorageTest {
                                 .hasFieldOrPropertyWithValue("name", "update film")
                                 .hasFieldOrPropertyWithValue("description", "update description")
                                 .hasFieldOrPropertyWithValue("duration", 1000)
-                                .hasFieldOrPropertyWithValue("releaseDate", LocalDate.of(1977, 3,25))
+                                .hasFieldOrPropertyWithValue("releaseDate", LocalDate.of(1977, 3, 25))
                 )
                 .hasValueSatisfying(films ->
                         assertThat(films.get(1)).hasFieldOrPropertyWithValue("id", 2)
@@ -161,7 +161,7 @@ public class FilmDbStorageTest {
                                 .hasFieldOrPropertyWithValue("name", "film second call")
                                 .hasFieldOrPropertyWithValue("description", "description two")
                                 .hasFieldOrPropertyWithValue("duration", 500)
-                                .hasFieldOrPropertyWithValue("releaseDate", LocalDate.of(1999, 3,25))
+                                .hasFieldOrPropertyWithValue("releaseDate", LocalDate.of(1999, 3, 25))
                 )
                 .hasValueSatisfying(users ->
                         assertThat(users.size()).isEqualTo(3)
@@ -178,9 +178,9 @@ public class FilmDbStorageTest {
                 .birthday(LocalDate.of(1946, 8, 20))
                 .build();
         userStorage.create(userTest);
-    filmStorage.createLike(1,3);
-    List<Film> popularFilms = filmStorage.getPopularFilms(1);
-    assertEquals(popularFilms.get(0).getId(), 3);
+        filmStorage.createLike(1, 3);
+        List<Film> popularFilms = filmStorage.getPopularFilms(1);
+        assertEquals(popularFilms.get(0).getId(), 3);
     }
 
     @Test
@@ -194,19 +194,29 @@ public class FilmDbStorageTest {
 
     @Test
     @Order(7)
+    public void creteDuplicateLikeTest() {
+        assertTrue(filmStorage.createLike(1, 1));
+        assertTrue(filmStorage.createLike(1, 1));
+        List<Film> popularFilms = filmStorage.getPopularFilms(1);
+        assertEquals(popularFilms.get(0).getId(), 2);
+    }
+
+
+    @Test
+    @Order(8)
     public void deleteAndCreateNonExistLikeTest() {
-        NotFoundException filmExDel = Assertions.assertThrows(NotFoundException.class, () -> filmStorage.deleteLike(1,-5));
+        NotFoundException filmExDel = Assertions.assertThrows(NotFoundException.class, () -> filmStorage.deleteLike(1, -5));
         assertEquals("Film not found", filmExDel.getMessage());
-        NotFoundException userExDel = Assertions.assertThrows(NotFoundException.class, () -> filmStorage.deleteLike(-5,1));
+        NotFoundException userExDel = Assertions.assertThrows(NotFoundException.class, () -> filmStorage.deleteLike(-5, 1));
         assertEquals("User not found", userExDel.getMessage());
-        NotFoundException filmExCreate = Assertions.assertThrows(NotFoundException.class, () -> filmStorage.createLike(1,-5));
+        NotFoundException filmExCreate = Assertions.assertThrows(NotFoundException.class, () -> filmStorage.createLike(1, -5));
         assertEquals("Film not found", filmExCreate.getMessage());
-        NotFoundException userExCreate  = Assertions.assertThrows(NotFoundException.class, () -> filmStorage.createLike(-5,1));
+        NotFoundException userExCreate = Assertions.assertThrows(NotFoundException.class, () -> filmStorage.createLike(-5, 1));
         assertEquals("User not found", userExCreate.getMessage());
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     public void filmUpdateWithGenreTest() {
         Film filmTestUpdate = Film.builder()
                 .name("update genre film")
@@ -229,14 +239,14 @@ public class FilmDbStorageTest {
                         assertThat(film).hasFieldOrPropertyWithValue("id", 1))
                 .hasValueSatisfying(film ->
                         assertEquals(film.getGenres().get(0), Genre.builder()
-                                                                    .id(3)
-                                                                    .name("Мультфильм")
-                                                                    .build())
+                                .id(3)
+                                .name("Мультфильм")
+                                .build())
                 );
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     public void testUpdateRemoveGenreFilmTest() {
         Film filmTestUpdate = Film.builder()
                 .name("update delete genre film")

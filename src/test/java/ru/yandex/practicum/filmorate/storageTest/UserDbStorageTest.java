@@ -136,8 +136,8 @@ public class UserDbStorageTest {
     @Test
     @Order(6)
     public void addFriendTest() {
-        assertTrue(userStorage.addFriend(1,2));
-        assertTrue(userStorage.addFriend(1,3));
+        assertTrue(userStorage.addFriend(1, 2));
+        assertTrue(userStorage.addFriend(1, 3));
         NotFoundException ex = Assertions.assertThrows(NotFoundException.class, () -> userStorage.addFriend(1, -1));
         assertEquals("User not found", ex.getMessage());
         assertEquals(userStorage.getFriendList(1).toString(), "[2, 3]");
@@ -147,8 +147,16 @@ public class UserDbStorageTest {
 
     @Test
     @Order(7)
+    public void createDuplicateFriendTest() {
+        assertTrue(userStorage.addFriend(2, 1));
+        assertTrue(userStorage.addFriend(2, 1));
+        assertEquals(1, userStorage.getFriendList(2).size());
+    }
+
+    @Test
+    @Order(8)
     public void deleteFriendTest() {
-        assertTrue(userStorage.addFriend(2,1));
+        assertTrue(userStorage.addFriend(2, 1));
         assertTrue(userStorage.deleteFriend(1, 2));
         assertEquals(userStorage.getFriendList(1).toString(), "[3]");
         assertEquals(userStorage.getFriendList(2).toString(), "[1]");

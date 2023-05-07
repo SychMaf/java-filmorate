@@ -81,7 +81,7 @@ public class UserDbStorage implements UserStorage {
     public boolean addFriend(int firstUserId, int secondUserId) {
         findUser(firstUserId);
         findUser(secondUserId);
-        String sql = "insert into friendship (first_user_id, second_user_id) " +
+        String sql = "merge into friendship key(first_user_id, second_user_id) " +
                 "values(?, ?)";
         return jdbcTemplate.update(sql, firstUserId, secondUserId) > 0;
     }
