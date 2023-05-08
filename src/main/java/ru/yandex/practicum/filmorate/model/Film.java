@@ -9,6 +9,8 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -29,6 +31,8 @@ public class Film {
     private LocalDate releaseDate;
     @Positive
     private Integer duration;
+    private Mpa mpa;
+    private List<Genre> genres = new LinkedList<>();
 
     public void addLike(Integer userId) {
         likes.add(userId);
